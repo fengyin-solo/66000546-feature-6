@@ -3,7 +3,7 @@
     <h4>🚨 告警列表</h4>
     <div v-if="!alerts.length" class="empty">暂无告警</div>
     <div v-for="a in alerts.slice(0,8)" :key="a.id" class="alert-row" :class="a.severity">
-      <span class="a-sev" :class="a.severity">{{ a.severity.toUpperCase() }}</span>
+      <span class="a-sev" :class="a.severity">{{ severityText(a.severity) }}</span>
       <span class="a-msg">{{ a.message }}</span>
     </div>
   </div>
@@ -14,6 +14,9 @@ import { computed } from 'vue'
 import { useLogStore } from '../store/log'
 const store = useLogStore()
 const alerts = computed(() => store.result?.alerts || [])
+function severityText(s: string) {
+  return { low: 'LOW', medium: 'MED', high: 'HIGH', critical: 'CRIT' }[s] || s.toUpperCase()
+}
 </script>
 
 <style scoped>
@@ -24,9 +27,11 @@ const alerts = computed(() => store.result?.alerts || [])
 .alert-row.high{background:#7f1d1d33}
 .alert-row.critical{background:#991b1b55}
 .alert-row.medium{background:#78350f33}
-.a-sev{font-weight:700;min-width:50px;font-size:10px;padding:1px 4px;border-radius:2px}
+.alert-row.low{background:#1e3a5f44}
+.a-sev{font-weight:700;min-width:50px;font-size:10px;padding:1px 4px;border-radius:2px;text-align:center}
 .a-sev.critical{color:#fca5a5;background:#991b1b}
 .a-sev.high{color:#f87171;background:#7f1d1d}
 .a-sev.medium{color:#fbbf24;background:#78350f}
+.a-sev.low{color:#7dd3fc;background:#0c4a6e}
 .a-msg{color:#e2e8f0}
 </style>
