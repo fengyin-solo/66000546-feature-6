@@ -234,3 +234,9 @@ sandbox/
 *.pid
 *.seed
 *.pid.lock
+
+# =========================
+# Project-specific
+# =========================
+.venv311/
+backend/app/rule_config.json

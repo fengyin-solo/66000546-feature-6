@@ -4,11 +4,12 @@
       <h1>📊 分布式日志聚合与智能异常检测平台</h1>
       <div class="toolbar">
         <el-select v-model="store.logType" size="small" style="width:140px">
-          <el-option v-for="t in ['nginx','apache','json_app','custom']" :key="t" :label="t" :value="t"/>
+          <el-option v-for="t in store.logTypes" :key="t" :label="t" :value="t"/>
         </el-select>
         <el-input v-model="store.searchQuery" placeholder="搜索关键词..." size="small" style="width:200px" clearable/>
         <el-button size="small" @click="store.generate()" :loading="store.loading">🔍 生成日志</el-button>
         <el-button size="small" type="warning" @click="store.detect()" :disabled="!store.result">⚠ 检测异常</el-button>
+        <el-button size="small" type="info" @click="showSettings = true">⚙ 规则设置</el-button>
       </div>
     </header>
     <div class="main-grid">
@@ -24,17 +25,22 @@
       <TrendChart />
       <HeatmapChart />
     </div>
+    <RuleSettings v-model="showSettings" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import LogTable from './components/LogTable.vue'
 import AnomalyChart from './components/AnomalyChart.vue'
 import AlertPanel from './components/AlertPanel.vue'
 import TrendChart from './components/TrendChart.vue'
 import HeatmapChart from './components/HeatmapChart.vue'
+import RuleSettings from './components/RuleSettings.vue'
 import { useLogStore } from './store/log'
 const store = useLogStore()
+const showSettings = ref(false)
+onMounted(() => store.fetchConfig())
 </script>
 
 <style>
